@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "../common_dht_read.h"
 #include "pi_dht_read.h"
 #include "pi_2_dht_read.h"
 
@@ -29,7 +30,11 @@ static void test_read(platform_type platform, const int sensor, const int pin)
 
     while (1) {
         result = pi_2_dht_read(sensor, pin, &humidity, &temperature);
-        printf("From read: \n>>temp: %0f\n>>humidity: %0f", temperature, humidity);
+        if (result) {
+            fprintf(stderr, "ERROR: RECEIVED %d FROM pi_2_dht_read\n", result);
+            exit(1);
+        }
+        printf("From read: \n>>temp: %0f\n>>humidity: %0f\n", temperature, humidity);
         sleep(2);
     }
 }
