@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "env/bin/python",
-    "files.associations": {
-        "pi_2_dht_read.h": "c"
-    }
-}
