@@ -11,4 +11,16 @@
 # The above copyright notice and this permission notice shall be included in all
 # copies or substantial portions of the Software.
 
+from .common import read_retry
 
+class DHTDriver:
+    
+    def __init__(self, sensor_type, pin_number):
+        self.sensor = sensor_type
+        self.pin = pin_number
+    
+    def get_reading(self):
+        humidity, temperature = read_retry(self.sensor, self.pin)
+        if humidity is not None and temperature is not None:
+            print('Temp={0:0.1f}*  Humidity={1:0.1f}%'.format(temperature, humidity))
+            return (temperature, humidity)

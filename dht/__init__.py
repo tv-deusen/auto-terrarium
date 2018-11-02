@@ -19,3 +19,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 from .common import DHT11, DHT22, AM2302, read, read_retry
+from .dht import DHTDriver
