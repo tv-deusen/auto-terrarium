@@ -18,15 +18,18 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
+import os
 from . import common
-import Raspberry_Pi_2_Driver as driver
+# import Raspberry_Pi_2_Driver as driver
+import ctypes
 
 def read(sensor, pin):
+    driver = ctypes.CDLL(os.getcwd() + '/dht/ccode/dht.so')
     # Validate pin is a valid GPIO.
     if pin is None or int(pin) < 0 or int(pin) > 31:
         raise ValueError('Pin must be a valid GPIO number 0 to 31.')
     # Get a reading from C driver code.
-    result, humidity, temp = driver.read(sensor, int(pin))
+    result, humidity, temp = driver.d_read(sensor, 4)
     if result in common.TRANSIENT_ERRORS:
         # Signal no result could be obtained, but the caller can retry.
         return (None, None)

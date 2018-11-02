@@ -63,12 +63,12 @@ elif platform == platform_detect.RASPBERRY_PI:
                                     extra_compile_args=['-std=gnu99']))
     elif pi_version == 2:
         extensions.append(Extension("Adafruit_DHT.Raspberry_Pi_2_Driver",
-                                    ["dht/ccode/_Raspberry_Pi_2_Driver.c", "dht/ccode/common_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_mmio.c"],
+                                    ["dht/ccode/Raspberry_Pi_2_Driver.c", "dht/ccode/common_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_mmio.c"],
                                     libraries=['rt'],
                                     extra_compile_args=['-std=gnu99']))
     elif pi_version == 3:
         extensions.append(Extension("Adafruit_DHT.Raspberry_Pi_2_Driver",
-                                    ["dht/ccode/_Raspberry_Pi_2_Driver.c", "dht/ccode/common_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_mmio.c"],
+                                    ["dht/ccode/Raspberry_Pi_2_Driver.c", "dht/ccode/common_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_mmio.c"],
                                     libraries=['rt'],
                                     extra_compile_args=['-std=gnu99']))
     else:

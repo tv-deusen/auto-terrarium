@@ -1,5 +1,11 @@
 CC = gcc
-CFLAGS = -g -Wall -O0 -IRaspberry_Pi -IRaspberry_Pi_2
+CFLAGS = -Wall -g -O0 -IRaspberry_Pi -IRaspberry_Pi_2
+
+shared: Raspberry_Pi_2_Driver.o pi_2_mmio.o pi_2_dht_read.o
+	$(CC) -shared -o dht.so Raspberry_Pi_2_Driver.o pi_2_dht_read.o pi_2_mmio.o common_dht_read.o
+
+driver.o: Raspberry_Pi_2_Driver.h Raspberry_Pi_2_Driver.c pi_2_dht_read.o
+	$(CC) $(CFLAGS) -c Raspberry_Pi_2_Driver.c
 
 debug: debug.o pi_2_mmio.o pi_2_dht_read.o 
 	$(CC) $(CFLAGS) -o debug debug.o pi_2_dht_read.o common_dht_read.o pi_2_mmio.o
