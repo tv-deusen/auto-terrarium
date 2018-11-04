@@ -4,4 +4,5 @@ typedef struct reading_t {
     float temperature;
 } Reading;
 
-Reading d_read(int sensor, int pin);
+void free_read_result(Reading *r);
+Reading* d_read(int sensor, int pin);

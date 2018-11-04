@@ -14,8 +14,8 @@
 from .common import read_retry
 
 class DHTDriver:
-    
-    def __init__(self, sensor_type, pin_number):
+
+    def __init__(self, sensor_type='AM2302', pin_number=4):
         self.sensor = sensor_type
         self.pin = pin_number
     
@@ -23,4 +23,4 @@ class DHTDriver:
         humidity, temperature = read_retry(self.sensor, self.pin)
         if humidity is not None and temperature is not None:
             print('Temp={0:0.1f}*  Humidity={1:0.1f}%'.format(temperature, humidity))
-            return (temperature, humidity)
+            return humidity, temperature
