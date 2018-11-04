@@ -13,6 +13,7 @@ def parse_args():
     return parser.parse_args()
 
 
+# TODO: need to fork off a process that will take readings based on an interval
 def main():
     args = parse_args()
     sensor = args.sensor
