@@ -1,4 +1,6 @@
 import argparse
+import time
+from multiprocessing import Process
 
 from dht import DHTDriver
 from dht import SENSORS
@@ -13,7 +15,12 @@ def parse_args():
     return parser.parse_args()
 
 
-# TODO: need to fork off a process that will take readings based on an interval
+def start_read(sensor, pin):
+    while 1:
+        driver = DHTDriver(sensor, pin)
+        driver.get_reading()
+        time.sleep(5)
+
 def main():
     args = parse_args()
     sensor = args.sensor
@@ -22,9 +29,9 @@ def main():
     assert sensor in SENSORS, "Invalid sensor type '{}'".format(sensor)
     assert pin > 1
 
-    driver = DHTDriver(sensor, pin)
-    driver.get_reading()
-
+    p = Process(target=start_read, args=(sensor, pin))
+    p.start()
+    p.join()  # just block for now
 
 if __name__ == "__main__":
     main()
