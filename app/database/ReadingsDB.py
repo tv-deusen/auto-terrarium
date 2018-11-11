@@ -4,7 +4,6 @@ from pathlib import Path
 from .Exceptions import *
 from .Reading import Reading
 
-
 # ReadingsDB Requirements:
 # - Initialization
 # - Deletion (or at least freeing space)
@@ -12,47 +11,48 @@ from .Reading import Reading
 # - Insertion
 # - Reading
 
+DEFAULT_DB_FILE = "readings.sqlite"
+
 
 class ReadingsDBController:
-    _DB_FILE_ = str(Path.home()) + '/terrarium_readings.sqlite'
 
-    def __init__(self, expiry=30):
-
-        db_file = Path(self._DB_FILE_)
+    def __init__(self, db_path=DEFAULT_DB_FILE, expiry=30):
+        self._DB_PATH_ = db_path
+        db_file = Path(self._DB_PATH_)
         if not Path.exists(db_file):
             self.create_readings_table()
 
         # PARSE_DECLTYPES: makes module parse the declared type for each column it returns
         # PARSE_COLNAMES: makes module parse column name for each column it returns
-        self._connection = sqlite3.connect(self._DB_FILE_,
+        self._connection = sqlite3.connect(self._DB_PATH_,
                                            detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
         self._expiry = expiry
 
     # I feel like using _DB_FILE_ in this way in the static methods below is a bad idea...
     @staticmethod
-    def create_readings_table():
-        path = Path(ReadingsDBController._DB_FILE_)
-        if Path.exists(path):
-            raise DBCreateException("{} already exists".format(ReadingsDBController._DB_FILE_))
+    def create_readings_table(db_path=DEFAULT_DB_FILE, reinit=False):
+        path = Path(db_path)
+        if Path.exists(path) and not reinit:
+            raise DBCreateException("{} already exists".format(db_path))
 
-        new_connection = sqlite3.connect(ReadingsDBController._DB_FILE_)
+        new_connection = sqlite3.connect(db_path)
         cursor = new_connection.cursor()
 
-        cursor.execute('''CREATE TABLE IF NOT EXISTS readings
+        cursor.execute('''CREATE TABLE readings
                             (id INTEGER PRIMARY KEY, time TIMESTAMP, temp REAL, humidity REAL)''')
         new_connection.commit()
         new_connection.close()
 
         if not Path.exists(path):
-            raise DBCreateException("Could not create database at {}".format(ReadingsDBController._DB_FILE_))
+            raise DBCreateException("Could not create database at {}".format(db_path))
 
     @staticmethod
-    def drop_readings_table():
-        path = Path(ReadingsDBController._DB_FILE_)
+    def drop_readings_table(db_path=DEFAULT_DB_FILE):
+        path = Path(db_path)
         if not Path.exists(path):
-            raise DBDropException("{} does not exist".format(ReadingsDBController._DB_FILE_))
+            raise DBDropException("{} does not exist".format(db_path))
 
-        conn = sqlite3.connect(ReadingsDBController._DB_FILE_)
+        conn = sqlite3.connect(db_path)
         cursor = conn.cursor()
 
         cursor.execute('''DROP TABLE readings''')
@@ -60,7 +60,7 @@ class ReadingsDBController:
         conn.close()
 
     # Readings from the sensor are only being taken once every
-    # five minutes, so getting the latest one should be acceptable
+    # five minutes, so getting the latest one should be acceptable for display
     def get_latest_reading(self):
         cursor = self._connection.cursor()
         cursor.execute("SELECT * FROM readings ORDER BY time DESC LIMIT 1")

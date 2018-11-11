@@ -1,8 +1,9 @@
-from setuptools import setup, find_packages, Extension
 import os
 import sys
 
-import dht.platform_detect as platform_detect
+from setuptools import setup, find_packages, Extension
+
+from app.dht import platform_detect
 
 BINARY_COMMANDS = [
     'build_ext',
@@ -24,43 +25,24 @@ def is_binary_install():
 def read(fname):
     return open(os.path.join(os.path.dirname(__file__), fname)).read()
 
-# Check if an explicit platform was chosen with a command line parameter.
-# Kind of hacky to manipulate the argument list before calling setup, but it's
-# the best simple option for adding optional config to the setup.
-platform = platform_detect.UNKNOWN
-pi_version = None
-if '--force-pi' in sys.argv:
-    platform = platform_detect.RASPBERRY_PI
-    pi_version = 1
-    sys.argv.remove('--force-pi')
-elif '--force-pi2' in sys.argv:
-    platform = platform_detect.RASPBERRY_PI
-    pi_version = 2
-    sys.argv.remove('--force-pi2')
-elif '--force-bbb' in sys.argv:
-    platform = platform_detect.BEAGLEBONE_BLACK
-    sys.argv.remove('--force-bbb')
-elif '--force-test' in sys.argv:
-    platform = 'TEST'
-    sys.argv.remove('--force-test')
-else:
-    # No explicit platform chosen, detect the current platform.
-    platform = platform_detect.platform_detect()
+
+# TODO: Eventually just remove the platform detection module
+platform = platform_detect.platform_detect()
+pi_version = 2
+
 
 # Pick the right extension to compile based on the platform.
 extensions = []
 if not is_binary_install():
-    print('Skipped loading platform-specific extensions for Adafruit_DHT (we are generating a cross-platform source distribution).')
+    print('Skipped loading platform-specific extensions (we are generating a cross-platform source distribution).')
 elif platform == platform_detect.RASPBERRY_PI:
     # Get the Pi version (1 or 2)
     if pi_version is None:
         pi_version = platform_detect.pi_version()
     # Build the right extension depending on the Pi version.
     if pi_version == 1:
-        extensions.append(Extension("Adafruit_DHT.Raspberry_Pi_Driver",
-                                    ["dht/ccode/_Raspberry_Pi_Driver.c", "dht/ccode/common_dht_read.c", "dht/ccode/Raspberry_Pi/pi_dht_read.c", "dht/ccode/Raspberry_Pi/pi_mmio.c"],
-                                    libraries=['rt'],
-                                    extra_compile_args=['-std=gnu99']))
+        print("Only Raspberry Pi v2 is supported")
+        sys.exit(1)
     elif pi_version == 2:
         extensions.append(Extension("Adafruit_DHT.Raspberry_Pi_2_Driver",
                                     ["dht/ccode/Raspberry_Pi_2_Driver.c", "dht/ccode/common_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_dht_read.c", "dht/ccode/Raspberry_Pi_2/pi_2_mmio.c"],
@@ -73,10 +55,6 @@ elif platform == platform_detect.RASPBERRY_PI:
                                     extra_compile_args=['-std=gnu99']))
     else:
         raise RuntimeError('Detected Pi version that has no appropriate driver available.')
-elif platform == 'TEST':
-    extensions.append(Extension("Adafruit_DHT.Test_Driver",
-                                ["dht/ccode/_Test_Driver.c", "dht/ccode/Test/test_dht_read.c"],
-                                extra_compile_args=['-std=gnu99']))
 else:
     print('Could not detect if running on the Raspberry Pi.  If this failure is unexpected, you can run again with --force-pi or --force-bbb parameter to force using the Raspberry Pi or Beaglebone Black respectively.')
     sys.exit(1)
@@ -91,14 +69,14 @@ classifiers = ['Development Status :: 4 - Beta',
                'Topic :: System :: Hardware']
 
 # Call setuptools setup function to install package.
-setup(name              = 'Adafruit_DHT',
-      version           = '1.3.4',
-      author            = 'Tony DiCola',
-      author_email      = 'tdicola@adafruit.com',
-      description       = 'Library to get readings from the DHT11, DHT22, and AM2302 humidity and temperature sensors on a Raspberry Pi or Beaglebone Black.',
+setup(name='auto-terrarium',
+      version='0.1',
+      author='Tom Van Deusen',
+      author_email='tvdeusen0892@gmail.com',
+      description='',
       long_description  = read('README.md'),
       license           = 'MIT',
       classifiers       = classifiers,
-      url               = 'https://github.com/adafruit/Adafruit_Python_DHT/',
+      url='',
       packages          = find_packages(),
-ext_modules = extensions)
+      ext_modules=extensions, install_requires=['dht'])

@@ -22,7 +22,6 @@ import time
 
 from . import platform_detect
 
-
 # Define error constants.
 DHT_SUCCESS        =  0
 DHT_ERROR_TIMEOUT  = -1
@@ -45,8 +44,7 @@ def get_platform():
         # Check for version 1 or 2 of the pi.
         version = platform_detect.pi_version()
         if version == 1:
-            from . import Raspberry_Pi
-            return Raspberry_Pi
+            raise RuntimeError('Only Pi 2 and above is supported')
         elif version == 2:
             from . import Raspberry_Pi_2
             return Raspberry_Pi_2
@@ -56,11 +54,9 @@ def get_platform():
             return Raspberry_Pi_2
         else:
             raise RuntimeError('No driver for detected Raspberry Pi version available!')
-    elif plat == platform_detect.BEAGLEBONE_BLACK:
-        from . import Beaglebone_Black
-        return Beaglebone_Black
     else:
         raise RuntimeError('Unknown platform.')
+
 
 def read(sensor, pin, platform=None):
     """Read DHT sensor of specified sensor type (DHT11, DHT22, or AM2302) on
@@ -80,6 +76,7 @@ def read(sensor, pin, platform=None):
         platform = get_platform()
     return platform.read(sensor, pin)
 
+
 def read_retry(sensor, pin, retries=15, delay_seconds=2, platform=None):
     """Read DHT sensor of specified sensor type (DHT11, DHT22, or AM2302) on
     specified pin and return a tuple of humidity (as a floating point value
@@ -93,6 +90,6 @@ def read_retry(sensor, pin, retries=15, delay_seconds=2, platform=None):
     for i in range(retries):
         humidity, temperature = read(sensor, pin, platform)
         if humidity is not None and temperature is not None:
-            return (humidity, temperature)
+            return humidity, temperature
         time.sleep(delay_seconds)
-    return (None, None)
+    return None, None

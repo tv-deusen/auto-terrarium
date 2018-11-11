@@ -4,7 +4,7 @@ from datetime import datetime, date
 from pathlib import Path
 
 from .Reading import Reading
-from .ReadingsDB import ReadingsDBController
+from .ReadingsDB import ReadingsDBController, DEFAULT_DB_FILE
 
 curtime = datetime.now()
 test_reading = Reading(curtime, 72, 44)
@@ -13,13 +13,13 @@ test_reading = Reading(curtime, 72, 44)
 class TestReadingsDB(unittest.TestCase):
 
     def setUp(self):
-        path = Path(ReadingsDBController._DB_FILE_)
+        path = Path(DEFAULT_DB_FILE)
         if Path.exists(path):
-            os.remove(ReadingsDBController._DB_FILE_)
+            os.remove(DEFAULT_DB_FILE)
 
     def test_get_latest_reading(self):
-        ReadingsDBController.create_readings_table()
-        db = ReadingsDBController()
+        ReadingsDBController.create_readings_table('test.sqlite', reinit=True)
+        db = ReadingsDBController('test.sqlite')
 
         db.write(test_reading)
         reading = db.get_latest_reading()
@@ -28,10 +28,10 @@ class TestReadingsDB(unittest.TestCase):
         self.assertEqual(reading.temperature, test_reading.temperature)
         self.assertEqual(reading.humidity, test_reading.humidity)
 
-        ReadingsDBController.drop_readings_table()
+        ReadingsDBController.drop_readings_table('test.sqlite')
 
     def test_record_good_reading(self):
-        ReadingsDBController.create_readings_table()
+        ReadingsDBController.create_readings_table('test.sqlite', reinit=True)
         db = ReadingsDBController()
 
         db.write(test_reading)

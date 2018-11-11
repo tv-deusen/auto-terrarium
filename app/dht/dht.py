@@ -13,6 +13,7 @@
 
 from .common import read_retry
 
+
 class DHTDriver:
 
     def __init__(self, sensor_type='AM2302', pin_number=4):
