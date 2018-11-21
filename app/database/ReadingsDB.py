@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-from .Exceptions import *
+from app.Exceptions import *
 from .Reading import Reading
 
 # ReadingsDB Requirements:
@@ -58,6 +58,11 @@ class ReadingsDBController:
         cursor.execute('''DROP TABLE readings''')
         conn.commit()
         conn.close()
+
+
+    def get_connection(self):
+        return self._connection
+
 
     # Readings from the sensor are only being taken once every
     # five minutes, so getting the latest one should be acceptable for display

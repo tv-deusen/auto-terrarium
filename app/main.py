@@ -1,9 +1,12 @@
 import argparse
 import time
+import subprocess
+
+from .Exceptions import CompileException
 from multiprocessing import Process
 from pathlib import Path
-
 from dht import DHTDriver, common
+
 
 sensor_types = ('DHT11', 'DHT22', 'AM2302')
 # Adafruit code converts str to int for use in driver code
@@ -20,8 +23,12 @@ def parse_args():
     return parser.parse_args()
 
 
-# TODO: compile DHT driver code from main if needed
 def compile_dht_library():
+    makecmd = "make shared"
+    proc = subprocess.Popen(makecmd.split(), cwd="./dht/", stdout=subprocess.PIPE)
+    _, err = proc.communicate()
+    if err is not None:
+        raise CompileException("failed to compile DHT C driver code")
 
 
 def start_read(sensor, pin):
@@ -37,7 +44,11 @@ def main():
     pin = args.pin
     db_path = Path(args.database_path)
 
-    print(sensor)
+    try:
+        compile_dht_library()
+    except CompileException as e:
+        print(e.msg)
+        exit(1)
 
     assert sensor in sensor_types, "Invalid sensor type '{}'".format(sensor)
     assert pin > 1
