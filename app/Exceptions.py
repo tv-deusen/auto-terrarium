@@ -18,3 +18,7 @@ class DBCreateException(MessagedException):
 
 class DBDropException(MessagedException):
     pass
+
+
+class CompileException(MessagedException):
+    pass
