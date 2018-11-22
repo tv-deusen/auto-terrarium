@@ -50,7 +50,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'auto_terrarium_app.urls'
+ROOT_URLCONF = 'auto_terrarium.urls'
 
 TEMPLATES = [
     {
@@ -68,7 +68,8 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'auto_terrarium_app.wsgi.application'
+# WSGI_APPLICATION = 'auto_terrarium_app.wsgi.application'
+WSGI_APPLICATION = 'wsgi.application'
 
 
 # Database
