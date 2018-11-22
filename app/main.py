@@ -1,12 +1,13 @@
 import argparse
-import time
 import subprocess
-
-from .Exceptions import CompileException
+import time
 from multiprocessing import Process
 from pathlib import Path
+
 from dht import DHTDriver, common
 
+from .Exceptions import CompileException
+from .monitor import Monitor
 
 sensor_types = ('DHT11', 'DHT22', 'AM2302')
 # Adafruit code converts str to int for use in driver code
@@ -24,17 +25,23 @@ def parse_args():
 
 
 def compile_dht_library():
-    makecmd = "make shared"
-    proc = subprocess.Popen(makecmd.split(), cwd="./dht/", stdout=subprocess.PIPE)
+    make_cmd = "make shared"
+    proc = subprocess.Popen(make_cmd.split(), cwd="./dht/", stdout=subprocess.PIPE)
     _, err = proc.communicate()
     if err is not None:
         raise CompileException("failed to compile DHT C driver code")
 
 
-def start_read(sensor, pin):
-    driver = DHTDriver(sensor, pin)
+def start_drivers(sensor, pin, best_temp, best_hum):
+    dht = DHTDriver(sensor, pin)
+    mntr = Monitor(best_temp, best_hum)
+
     while 1:
-        driver.get_reading()
+        humidity, temp = dht.get_reading()
+
+        # TODO: how to handle regulating things?
+        mntr.check(humidity, temp)
+
         time.sleep(5)
 
 
@@ -53,7 +60,10 @@ def main():
     assert sensor in sensor_types, "Invalid sensor type '{}'".format(sensor)
     assert pin > 1
 
-    p = Process(target=start_read, args=(sensor_mapping.get(sensor), pin))
+    # Start DHT reading and monitor
+    # Make it a signal handler for server too?
+
+    p = Process(target=start_drivers, args=(sensor_mapping.get(sensor), pin))
     p.start()
     p.join()  # just block for now
 
