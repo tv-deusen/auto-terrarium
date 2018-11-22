@@ -3,8 +3,9 @@ import unittest
 from datetime import datetime, date
 from pathlib import Path
 
-from .Reading import Reading
+# from auto_terrarium_app.Reading import Reading
 from .ReadingsDB import ReadingsDBController, DEFAULT_DB_FILE
+from main_site.models import Reading
 
 curtime = datetime.now()
 test_reading = Reading(curtime, 72, 44)

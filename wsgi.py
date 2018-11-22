@@ -1,5 +1,5 @@
 """
-WSGI config for auto_terrarium project.
+WSGI config for auto_terrarium_app project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "auto_terrarium.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "auto_terrarium_app.settings")
 
 application = get_wsgi_application()
