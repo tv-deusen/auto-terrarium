@@ -3,7 +3,7 @@ import sys
 
 from setuptools import setup, find_packages, Extension
 
-from app.dht import platform_detect
+from auto_terrarium.dht import platform_detect
 
 BINARY_COMMANDS = [
     'build_ext',

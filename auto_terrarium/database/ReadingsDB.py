@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-from app.Exceptions import *
+from auto_terrarium.Exceptions import *
 from .Reading import Reading
 
 # ReadingsDB Requirements:
