@@ -1,5 +1,5 @@
 """
-WSGI config for auto_terrarium_app project.
+WSGI config for auto_terrarium_proj project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 

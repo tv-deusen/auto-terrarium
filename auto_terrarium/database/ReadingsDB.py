@@ -2,8 +2,7 @@ import sqlite3
 from pathlib import Path
 
 from auto_terrarium.Exceptions import *
-# from auto_terrarium_app.Reading import Reading
-from main_site.models import Reading
+from web_monitor.models import Reading
 
 # ReadingsDB Requirements:
 # - Initialization
