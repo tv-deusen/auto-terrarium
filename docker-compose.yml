@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  db:
+    image: postgres
+    ports: 
+      - "6339:6339"
+  auto_terrarium:
+    build: ./auto_terrarium
+    command: python3 main.py 22 4
+    ports:
+      - "6340:6340"
+  web:
+    build: ./web_monitor
+    command: python3 manage.py runserver 0.0.0.0:6341
+    volumes:
+      - ./web_monitor:/code
+    ports:
+      - "6341:6341"
+    depends_on:
+      - auto_terrarium
+      - db

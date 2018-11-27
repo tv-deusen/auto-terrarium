@@ -6,8 +6,8 @@ from pathlib import Path
 
 from dht import DHTDriver, common
 
-from .Exceptions import CompileException
-from .monitor import Monitor
+from Exceptions import CompileException
+from monitor import Monitor
 
 sensor_types = ('DHT11', 'DHT22', 'AM2302')
 # Adafruit code converts str to int for use in driver code
