@@ -7,7 +7,7 @@ services:
       - "6339:6339"
   auto_terrarium:
     build: ./auto_terrarium
-    command: python3 main.py 22 4
+    command: python3 auto_terrarium.py 22 4
     ports:
       - "6340:6340"
   web:
