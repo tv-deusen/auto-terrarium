@@ -1,8 +1,8 @@
 import sqlite3
 from pathlib import Path
 
-from app.Exceptions import *
-from .Reading import Reading
+from auto_terrarium.Exceptions import *
+from web_monitor.models import Reading
 
 # ReadingsDB Requirements:
 # - Initialization
