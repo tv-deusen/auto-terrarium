@@ -36,13 +36,6 @@ def start_drivers(sensor, pin, best_temp, best_hum):
     dht = DHTDriver(sensor, pin)
     mntr = Monitor(best_temp, best_hum)
 
-    while 1:
-        humidity, temp = dht.get_reading()
-
-        # TODO: how to handle regulating things?
-        mntr.check(humidity, temp)
-
-        time.sleep(5)
 
 
 def main():

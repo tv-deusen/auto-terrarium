@@ -16,7 +16,7 @@ from .common import read_retry
 
 class DHTDriver:
 
-    def __init__(self, sensor_type='AM2302', pin_number=4):
+    def __init__(self, sensor_type, pin_number):
         self.sensor = sensor_type
         self.pin = pin_number
     
